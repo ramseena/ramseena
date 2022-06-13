@@ -9,6 +9,7 @@ import Toast from 'react-native-simple-toast';
 const CustomDrawer = (props) =>{
   const [userName, setUserName] = useState("");
   const [time,setTime] = useState("");
+  const [expiry,setExpiry] = useState("")
   const showToast = (msg) => {
     Toast.show(msg, Toast.SHORT, [
       'UIAlertController',
@@ -60,7 +61,8 @@ const getShop = async () => {
   
   const userName = await AsyncStorage.getItem("userName");
   const time = await AsyncStorage.getItem("TIME");
-  
+  const expiry =  await AsyncStorage.getItem("expiry")
+  setExpiry(expiry)
   setTime(time)
   setUserName(userName)
 }
@@ -78,6 +80,10 @@ useEffect(() => {
       <Image source={require("./../images/account.png")}  style={{width:100, height:100,borderRadius:50}} />
       <Text style={styles.profileText}>{userName}</Text>
       {/* <Text style={styles.profileText}>LAST SYNCED :{time}</Text> */}
+      { expiry?<View>
+  <Text style={{textAlign:"center",padding:5,color:"#000"}}>Expires On:</Text>
+  <Text style={{textAlign:"center",padding:5,color:"#000"}}>{expiry}</Text></View>:null}
+   
       </View>
       <SingleComponent name="Add shop" id={1}/>
       <SingleComponent  name="Switch shop" id={2}/>

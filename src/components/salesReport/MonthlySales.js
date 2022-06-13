@@ -2,12 +2,23 @@
 import React, { useState,useEffect } from 'react';
 import { View, StatusBar,Text ,FlatList,Platform,SafeAreaView,StyleSheet,Button,TouchableOpacity,Image} from 'react-native';
 //import moment from 'moment';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../../common/Header';
 import {rounder} from './../../common/helper'
 
 const MonthlySales =({route,navigation}) =>{
     const { item } = route.params;
- 
+    const [decimal, setDecimal] = useState("");
+    const getDecimal=async()=>
+{
+  const decimals = await AsyncStorage.getItem("decimals");
+  setDecimal(decimals)
+}
+useEffect(()=>{
+  getDecimal();
+     
+    },[route])
+    
     const Item=({ item })=> {
         return (
             
@@ -27,7 +38,7 @@ const MonthlySales =({route,navigation}) =>{
           </View>
               <View style={{flexDirection:"row"}}>
               <Text style={styles.boxTextTag}>TOTAL</Text>
-              <Text style={styles.boxTextTag1}>{rounder(item.nettotal)} </Text>
+              <Text style={styles.boxTextTag1}>{rounder(item.nettotal,decimal)} </Text>
           </View>
           <View style={{flexDirection:"row"}}>
           <Text style={styles.boxTextTag}>TOTAL BILLS </Text>
@@ -107,7 +118,7 @@ const styles = StyleSheet.create({
     boxTextTag: {
       padding: 5,flex:1,
       textAlign: "left",
-      fontWeight: 'bold'
+      fontWeight: 'bold',color:"#000"
   
   
   

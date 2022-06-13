@@ -16,6 +16,8 @@ const SwitchScreen = ({ route,navigation }) => {
     setSelectedShop(data.name)
     await AsyncStorage.setItem("clienttoken", data.client_token);
     AsyncStorage.setItem("shopName",data.name)
+    AsyncStorage.setItem("decimals",JSON.stringify(data.decimals))
+    AsyncStorage.setItem("expiry",data.expires_on)
     const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
     setLoggedIn(isLoggedIn)
 

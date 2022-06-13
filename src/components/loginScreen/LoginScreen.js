@@ -13,11 +13,13 @@ function LoginScreen({ navigation,route }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [shopName,setShopName] = useState("")
+  const [expiry,setExpiry] = useState("")
   const [loading, setLoading] = useState(false);
   const getShop = async()=>
     {
-  const shopname =  await AsyncStorage.getItem("shopName")
-
+  const shopname =  await AsyncStorage.getItem("loggedInUser")
+  const expiry =  await AsyncStorage.getItem("expiry")
+  setExpiry(expiry)
   setShopName(shopname);
     }
     const { signIn} = React.useContext(AuthContext);
@@ -82,6 +84,7 @@ function LoginScreen({ navigation,route }) {
         console.log(loginResult.response,"data",loginResult.response.data)
        // AsyncStorage.setItem("isLoggedIn","true")
         AsyncStorage.setItem("shopName",loginResult.response.shop_name)
+        AsyncStorage.setItem("loggedInUser",loginResult.response.shop_name)
         AsyncStorage.setItem("userName",loginResult.response.data.username)
         AsyncStorage.setItem("TIME",loginResult.response.updation_time)
         signIn(username);
@@ -192,7 +195,8 @@ function LoginScreen({ navigation,route }) {
 {shopName?<View>
   <Text style={{textAlign:"center",padding:5,color:"#000"}}>Last Login:</Text>
   <Text style={{textAlign:"center",padding:5,color:"#000"}}>{shopName}</Text></View>:null}
-   </View>
+  </View>
+
   
 
    <View style={{flex:.5, justifyContent:'center'}}>
@@ -223,12 +227,12 @@ function LoginScreen({ navigation,route }) {
        style={styles.button}
        onPress={()=>login()}
      >
-       <Text style={{color:"#FFFFFF"}}>login</Text>
+       <Text style={{color:"#FFFFFF",fontSize:20}}>Login</Text>
     
 </TouchableOpacity>
      <View style={{flexDirection:"row",justifyContent:"space-between"}}>
-     <TouchableOpacity onPress={()=>navigation.navigate("license",{fromPage:"login"})}><Text style={{textAlign:'left',paddingLeft:20,marginTop:10,fontSize:20,color:"#000"}}>Add Shop</Text></TouchableOpacity>
-     <TouchableOpacity onPress={()=>switchUser()}><Text style={{textAlign:'right',paddingRight:20,marginTop:10,fontSize:20,color:"#000"}}>Switch Shop</Text></TouchableOpacity>
+     <TouchableOpacity onPress={()=>navigation.navigate("license",{fromPage:"login"})}><Text style={{textAlign:'left',paddingLeft:20,marginTop:10,fontSize:17,color:"#000"}}>Add Shop</Text></TouchableOpacity>
+     <TouchableOpacity onPress={()=>switchUser()}><Text style={{textAlign:'right',paddingRight:20,marginTop:10,fontSize:17,color:"#000"}}>Switch Shop</Text></TouchableOpacity>
 </View>
 
 
@@ -285,7 +289,7 @@ borderColor:"#f47822",
 },
 
 input: {
-
+color:"#000",
  marginLeft:20,
  marginRight:20,
  marginTop:5,

@@ -11,7 +11,7 @@ import DeviceInfo from 'react-native-device-info';
 import {rounder} from './../../common/helper'
 
 const CashScreen = ({ route, navigation }) => {
-  
+  const [decimal, setDecimal] = useState("");
   const [bankDatas, setBankData] = useState("");
   const [todayData, setTodayData] = useState("");
   const [yesterdayData, setYesterdayData] = useState("");
@@ -34,7 +34,8 @@ const CashScreen = ({ route, navigation }) => {
   }
   const getData = async () => {
 
-     
+    const decimal =  await AsyncStorage.getItem("decimals");
+    setDecimal(decimal)
     let deviceId = await DeviceInfo.getUniqueId()
     const token = await AsyncStorage.getItem("token");
     const clienttoken = await AsyncStorage.getItem("clienttoken");
@@ -110,21 +111,21 @@ getData()
 
                 <View style={{ flexDirection: "row" ,alignItems:"flex-start"}}>
                <Text style={styles.boxTextTag}>Opening Balance</Text>
-               <Text style={[styles.boxText,{fontWeight:"bold",color:"#000"}]}>{rounder(todayData.opening_balance)}</Text>
+               <Text style={[styles.boxText,{fontWeight:"bold",color:"#000"}]}>{rounder(todayData.opening_balance,decimal)}</Text>
              </View>
              <View style={{ flexDirection: "row" ,alignItems:"flex-start"}}>
                <Text  style={[styles.boxTextTag,{color:"green"}]}>Total Debit</Text>
-               <Text style={[styles.boxText,{color:"green"}]}>{rounder(todayData.total_debit)}</Text>
+               <Text style={[styles.boxText,{color:"green"}]}>{rounder(todayData.total_debit,decimal)}</Text>
              </View>
             
              <View style={{ flexDirection: "row" ,alignItems:"flex-start",justifyContent:"flex-start"}}>
                <Text style={[styles.boxTextTag,{color:"red"}]}>Total credit</Text>
-               <Text style={[styles.boxText,{color:"red"}]}>{rounder(todayData.total_credit)}</Text>
+               <Text style={[styles.boxText,{color:"red"}]}>{rounder(todayData.total_credit,decimal)}</Text>
              </View>
              
              <View style={{ flexDirection: "row" ,alignItems:"flex-start"}}>
                <Text style={styles.boxTextTag}>Closing Balance</Text>
-               <Text style={[styles.boxText,{fontWeight:"bold",color:"#000"}]}>{rounder(todayData.closing_balance)}</Text>
+               <Text style={[styles.boxText,{fontWeight:"bold",color:"#000"}]}>{rounder(todayData.closing_balance,decimal)}</Text>
              </View>
 
 
@@ -142,22 +143,22 @@ getData()
 
           <View style={{ flexDirection: "row" }}>
             <Text style={styles.boxTextTag}>Opening Balance</Text>
-            <Text style={[styles.boxText,{fontWeight:"bold",color:"#000"}]}>{rounder(yesterdayData.opening_balance)}</Text>
+            <Text style={[styles.boxText,{fontWeight:"bold",color:"#000"}]}>{rounder(yesterdayData.opening_balance,decimal)}</Text>
           </View>
           <View style={{ flexDirection: "row" }}>
             <Text  style={[styles.boxTextTag,{color:"green"}]}>Total Debit</Text>
-            <Text style={[styles.boxText,{color:"green"}]}>{rounder(yesterdayData.total_debit)}</Text>
+            <Text style={[styles.boxText,{color:"green"}]}>{rounder(yesterdayData.total_debit,decimal)}</Text>
           </View>
 
          
           <View style={{ flexDirection: "row" }}>
             <Text  style={[styles.boxTextTag,{color:"red"}]}>Total credit</Text>
-            <Text style={[styles.boxText,{color:"red"}]}>{rounder(yesterdayData.total_credit)}</Text>
+            <Text style={[styles.boxText,{color:"red"}]}>{rounder(yesterdayData.total_credit,decimal)}</Text>
           </View>
          
           <View style={{ flexDirection: "row" }}>
             <Text style={styles.boxTextTag}>Closing Balance</Text>
-            <Text style={[styles.boxText,{fontWeight:"bold",color:"#000"}]}>{rounder(yesterdayData.closing_balance)}</Text>
+            <Text style={[styles.boxText,{fontWeight:"bold",color:"#000"}]}>{rounder(yesterdayData.closing_balance,decimal)}</Text>
           </View>
 
 

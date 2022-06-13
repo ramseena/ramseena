@@ -2,10 +2,22 @@
 import React, { useState,useEffect } from 'react';
 import { View, StatusBar,Text ,Platform,SafeAreaView,StyleSheet,Button,TouchableOpacity,Image} from 'react-native';
 import Header from '../../common/Header';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {rounder} from './../../common/helper'
 
 const TodaySales =({route,navigation}) =>{
     const { item } = route.params;
+    const [decimal, setDecimal] = useState("");
+    const getDecimal=async()=>
+    {
+      const decimals =  await AsyncStorage.getItem("decimals");
+     console.log("decc",decimals)
+      setDecimal(decimals)
+    }
+    useEffect(()=>{
+      getDecimal();
+         
+        },[route])
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#f1f2f4' ,marginTop:StatusBar.currentHeight}}>
             <View style={{flex:1}}>
@@ -29,15 +41,15 @@ const TodaySales =({route,navigation}) =>{
          
               <View style={{flexDirection:"row"}}>
           <Text style={styles.boxTextTag}>Today Cash Sale </Text>
-          <Text style={styles.boxText}>{rounder(item.today_cash_sale)}</Text>
+          <Text style={styles.boxText}>{rounder(item.today_cash_sale,decimal)}</Text>
           </View>
               <View style={{flexDirection:"row"}}>
           <Text style={styles.boxTextTag}>Today Credit Sale </Text>
-          <Text style={styles.boxText}>{rounder(item.today_credit_sale)}</Text>
+          <Text style={styles.boxText}>{rounder(item.today_credit_sale,decimal)}</Text>
           </View>
               <View style={{flexDirection:"row"}}>
           <Text style={styles.boxTextTag}>Today Total Sale </Text>
-          <Text style={styles.boxText}>{rounder(item.today_total_sale)}</Text>
+          <Text style={styles.boxText}>{rounder(item.today_total_sale,decimal)}</Text>
           </View>
           <View style={{flexDirection:"row"}}>
           <Text style={styles.boxTextTag}>Total No of bills</Text>

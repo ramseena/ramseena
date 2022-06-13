@@ -10,18 +10,25 @@ import NetInfo from "@react-native-community/netinfo";
 import DeviceInfo from 'react-native-device-info';
 import Toast from 'react-native-simple-toast';
 const StockScreen =({navigation,route}) =>{
-  
+  const [decimal, setDecimal] = useState("");
     const [stockData, setStockData] = useState("");
     const [loading, setLoading] = useState(false);
+    const getDecimal=async()=>
+{
+  const decimals = await AsyncStorage.getItem("decimals");
+  setDecimal(decimals)
+}
 
     React.useEffect(() => {
       const unsubscribe = navigation.addListener('focus', () => {
+        getDecimal();
         setStockData(route.params.data) 
       });
     
       // Return the function to unsubscribe from the event so it gets removed on unmount
       return unsubscribe;
     }, [route]);
+    console.log("dec",decimal)
     const STATUSBAR_HEIGHT = Platform.OS === "ios" ? 20 : StatusBar.currentHeight;
     if (loading) {
       return (
@@ -55,7 +62,7 @@ const StockScreen =({navigation,route}) =>{
       </View>
       <Text style={styles.boxText}>{stockData.date}</Text>
       <Text style={styles.boxText}>Stock Available:</Text>
-      <Text style={styles.boxTextBold}>{rounder(stockData.amount)}</Text>
+      <Text style={styles.boxTextBold}>{rounder(stockData.amount,decimal)}</Text>
       </TouchableOpacity>
 
    

@@ -2,16 +2,19 @@
 import React, { useState, useEffect } from 'react';
 import { View, StatusBar, Text,FlatList, Platform, SafeAreaView, StyleSheet, Button, TouchableOpacity, Image } from 'react-native';
 import {rounder} from './../../common/helper'
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const BankBookDetail = ({ route, navigation }) => {
   const [data,setData] = useState("")
-  
+  const [decimal, setDecimal] = useState("");
 
-
-
+const getDecimal=async()=>
+{
+ const decimals =  await AsyncStorage.getItem("decimals");
+  setDecimal(decimals)
+}
 var a=0;
   useEffect(()=>{
-    
+getDecimal();
     setData(route.params.data.all)
   },[route])
 
@@ -43,11 +46,11 @@ setData(route.params.data.debit)
         </View>
          <View style={[styles.headerText]}>
         
-         <Text style={[styles.boxText,{color:"green",fontWeight:"bold",alignSelf:"flex-end"}]}>{rounder(item.debit)}</Text>
+         <Text style={[styles.boxText,{color:"green",fontWeight:"bold",alignSelf:"flex-end"}]}>{rounder(item.debit,decimal)}</Text>
          </View>  
          <View style={[styles.headerText]}>
         
-         <Text style={[styles.boxText,{color:"red",fontWeight:"bold",alignSelf:"flex-end"}]}>{rounder(item.credit)}</Text>
+         <Text style={[styles.boxText,{color:"red",fontWeight:"bold",alignSelf:"flex-end"}]}>{rounder(item.credit,decimal)}</Text>
          </View>
        
        </View>)
@@ -75,11 +78,11 @@ setData(route.params.data.debit)
          </View>
          <View style={styles.headerText}>
          <Text style={[styles.boxText,{color:"green",fontWeight:"bold"}]}>{"DEBIT"}</Text>
-         <Text style={[styles.boxText,{color:"green"}]}>{rounder(route.params.totdebit)}</Text>
+         <Text style={[styles.boxText,{color:"green"}]}>{rounder(route.params.totdebit,decimal)}</Text>
          </View>  
          <View style={[styles.headerText,{backgroundColor:"#fff5f6",padding:2}]}>
          <Text style={[styles.boxText,{color:"red",fontWeight:"bold"}]}>{"CREDIT"}</Text>
-         <Text style={[styles.boxText,{color:"red"}]}>{rounder(route.params.totcredit)}</Text>
+         <Text style={[styles.boxText,{color:"red"}]}>{rounder(route.params.totcredit,decimal)}</Text>
          </View>
        
        </View>

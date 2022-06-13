@@ -40,6 +40,9 @@ const [fromPage,setFromPage]= useState("")
 
         setLoading(false)
         await AsyncStorage.setItem("clienttoken", licenseData.response.licence.token);
+        await AsyncStorage.setItem("decimals", JSON.stringify(licenseData.response.licence.decimals));
+        await AsyncStorage.setItem("expiry", licenseData.response.licence.expires_on);
+        
         navigation.navigate('login')
         }
         else{
@@ -188,7 +191,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     padding: 10,
     borderWidth: 1,
-    borderColor: '#f47822',
+    borderColor: '#f47822',color:"#000",
     marginBottom: 10,
   },
 
