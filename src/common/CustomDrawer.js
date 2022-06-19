@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {View,SafeAreaView, Text,Image,StyleSheet,StatusBar,TouchableOpacity} from 'react-native';
-
+import { AuthContext } from '../components/context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from "@react-native-community/netinfo";
 import DeviceInfo from 'react-native-device-info';
@@ -25,9 +25,10 @@ const CustomDrawer = (props) =>{
       if (network.isConnected) {
 
         const data = await getUser(token, deviceId)
-      
+ 
         if(data){
-          props.navigation.navigate("SwitchScreen",{data:data})
+        
+          props.navigation.navigate("SwitchUser",{data:data})
         }
   
       }
@@ -35,12 +36,13 @@ const CustomDrawer = (props) =>{
         showToast("please check your network connection")
       }
     }
-    
+    const { signOut } = React.useContext(AuthContext);
   
   const handleAddShop =async()=>{
     //await AsyncStorage.removeItem("isLoggedIn");
    
-   props.navigation.navigate('license',{fromPage:"switch"})
+  signOut()
+  navigation.closeDrawer()
   //props.navigation.goBack()
    
   }

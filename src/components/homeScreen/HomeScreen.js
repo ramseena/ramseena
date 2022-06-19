@@ -148,7 +148,7 @@ console.log("lisstt",list)
           text: "Yes",
           onPress: () => {
 
-            signOut();
+            signOut("");
           },
         },
 

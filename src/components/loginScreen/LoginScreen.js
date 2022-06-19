@@ -10,6 +10,7 @@ import DeviceInfo from 'react-native-device-info';
 
 
 function LoginScreen({ navigation,route }) {
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [shopName,setShopName] = useState("")
@@ -17,7 +18,7 @@ function LoginScreen({ navigation,route }) {
   const [loading, setLoading] = useState(false);
   const getShop = async()=>
     {
-  const shopname =  await AsyncStorage.getItem("loggedInUser")
+  const shopname =  await AsyncStorage.getItem("shopName")
   const expiry =  await AsyncStorage.getItem("expiry")
   setExpiry(expiry)
   setShopName(shopname);
@@ -152,15 +153,24 @@ function LoginScreen({ navigation,route }) {
 
 
     const network = await NetInfo.fetch();
+    console.log("tokennn",token,deviceId)
     if (network.isConnected) {
-
+console.log(token,deviceId)
+try
+{
       const data = await getUser(token, deviceId)
       
-   
+  
       if(data){
+        console.log("switch",data)
         navigation.navigate("SwitchScreen",{data:data})
       }
-
+    }
+    catch(error)
+    {
+      console.log("err",error)
+alert("err")
+    }
     }
     else {
       showToast("please check your network connection")
@@ -193,7 +203,7 @@ function LoginScreen({ navigation,route }) {
    </View>
 
 {shopName?<View>
-  <Text style={{textAlign:"center",padding:5,color:"#000"}}>Last Login:</Text>
+  <Text style={{textAlign:"center",padding:5,color:"#000"}}>Current Shop:</Text>
   <Text style={{textAlign:"center",padding:5,color:"#000"}}>{shopName}</Text></View>:null}
   </View>
 
@@ -227,7 +237,7 @@ function LoginScreen({ navigation,route }) {
        style={styles.button}
        onPress={()=>login()}
      >
-       <Text style={{color:"#FFFFFF",fontSize:20}}>Login</Text>
+       <Text style={{color:"#FFFFFF",fontSize:19}}>Login</Text>
     
 </TouchableOpacity>
      <View style={{flexDirection:"row",justifyContent:"space-between"}}>

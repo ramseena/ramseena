@@ -11,7 +11,7 @@ import HomeScreen from './src/components/homeScreen/HomeScreen';
 import DataScreen from './src/components/dataScreen/DataScreen';
 import LicenseScreen from './src/components/licenseScreen/LicenseScreen';
 import { createDrawerNavigator } from '@react-navigation/drawer'
-import { getLicense, getToken } from './src/request';
+import { getLicense, getToken ,logoutRequest} from './src/request';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import StockScreen from './src/components/stockScreen/StockScreen';
 import SalesScreen from './src/components/salesReport/SalesReport';
@@ -21,6 +21,7 @@ import ListScreen from './src/components/listScreen/ListScreen';
 import YearlySales from './src/components/salesReport/YearlySales';
 import BankBook from './src/components/bookScreen/BankBook';
 import SwitchScreen from './src/components/SwitchScreen';
+import SwitchUser from './src/components/SwitchUser';
 import BankBookDetail from './src/components/bookScreen/BankBookDetail';
 import CashBookDetail from './src/components/bookScreen/CashBookDetail';
 import CashScreen from './src/components/bookScreen/CashScreen';
@@ -98,28 +99,26 @@ const LoginStackNavigator = () => {
     </Stack.Navigator>
   )
 }
-
+const loginStack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator()
 const HomeDrawer = createDrawerNavigator()
 const LOGINDrawer = createDrawerNavigator()
 
 const LoginDrawerNavigator = () => {
+  console.log("kikiki")
   return (
-    <LOGINDrawer.Navigator drawerContent={props => <CustomDrawer {...props} />}>
+    <loginStack.Navigator  initialRouteName={"login"}drawerContent={props => <CustomDrawer {...props} />}>
 
-      <LOGINDrawer.Screen swipeEnabled={false} options={{
+      <loginStack.Screen swipeEnabled={false} options={{
         headerShown: false,
-        LOGINDrawerItemStyle: {
-          display: "none",
-        },
       }}
 
-        name="login" component={LoginStackNavigator} />
-      <LOGINDrawer.Screen options={{ headerShown: false, swipeEnabled: false }}
+        name="login" component={LoginScreen} />
+      <loginStack.Screen options={{ headerShown: false, swipeEnabled: false }}
         name="license" swipeEnabled={false} component={LicenseScreen} />
-      <LOGINDrawer.Screen options={{ headerShown: false }}
+      <loginStack.Screen options={{ headerShown: false }}
         name="SwitchScreen" component={SwitchScreen} />
-    </LOGINDrawer.Navigator>
+    </loginStack.Navigator>
   )
 }
 const HomeDrawerNavigator = () => {
@@ -127,8 +126,7 @@ const HomeDrawerNavigator = () => {
     <HomeDrawer.Navigator drawerContent={props => <CustomDrawer {...props} />}>
       <HomeDrawer.Screen options={{ headerShown: false }}
         name="Add Shop" component={HomeStackNavigator} />
-      <HomeDrawer.Screen options={{ headerShown: false, swipeEnabled: false }}
-        name="license" swipeEnabled={false} component={LicenseScreen} />
+      
       <HomeDrawer.Screen options={{ headerShown: false }}
         name="BankBook" component={BankBook} />
       <HomeDrawer.Screen options={{ headerShown: false }}
@@ -139,7 +137,7 @@ const HomeDrawerNavigator = () => {
       <HomeDrawer.Screen options={{ headerShown: false }}
         name="List" component={ListScreen} />
       <HomeDrawer.Screen options={{ headerShown: false }}
-        name="SwitchScreen" component={SwitchScreen} />
+        name="SwitchUser" component={SwitchUser} />
       <HomeDrawer.Screen options={{ headerShown: false }}
         name="CashBookDetail" component={CashBookDetail} />
       <HomeDrawer.Screen options={{ headerShown: false }}
@@ -152,7 +150,6 @@ const HomeDrawerNavigator = () => {
         name="Monthly Report" component={MonthlyStackNavigator} />
       <HomeDrawer.Screen options={{ headerShown: false }}
         name="Sales Report" component={SalesStackNavigator} />
-
       <HomeDrawer.Screen options={{ headerShown: false }}
         name="Switch Shop" component={DataStackNavigator} />
     </HomeDrawer.Navigator>
@@ -181,7 +178,7 @@ export default function App() {
 
         };
       case 'LOGIN':
-
+        
         return {
           ...prevState,
           userName: action.id,
@@ -189,10 +186,10 @@ export default function App() {
           logIN: 1
         };
       case 'LOGOUT':
+       
         return {
           ...prevState,
           userName: null,
-          clientToken: null,
           isLoading: false,
           logIN: null
         };
@@ -225,13 +222,23 @@ export default function App() {
       }
       dispatch({ type: 'LOGIN', id: userName });
     },
-    signOut: async () => {
+    signOut: async (switchShop) => {
+      if(!switchShop)
+      {
       try {
         await AsyncStorage.removeItem("isLoggedIn");
+        const clienttoken = await AsyncStorage.getItem("clienttoken");
+   
+    
+      let deviceId = await DeviceInfo.getUniqueId()
+      const token = await AsyncStorage.getItem("token");
+      
+       await logoutRequest(clienttoken, token,deviceId);
 
       } catch (e) {
         
       }
+    }
       dispatch({ type: 'LOGOUT' });
     },
     signUp: () => {
@@ -309,10 +316,11 @@ export default function App() {
 
   return (
     <AuthContext.Provider value={authContext}>
+       {loginState.logIN !== null ? console.log("hurray"):console.log("heyy")}
       <NavigationContainer >
-        {loginState.logIN !== null ? (
+        {loginState.logIN !== null ? 
           <HomeDrawerNavigator />
-        )
+        
           :
           <LoginDrawerNavigator />
         }

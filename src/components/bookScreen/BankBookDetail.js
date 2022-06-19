@@ -71,16 +71,21 @@ setData(route.params.data.debit)
       </View>
         
        <View style={{flexDirection:"row",borderRadius:2,marginTop:15}}>
-       <View style={{flex:2,justifyContent:"center",alignItems:"center"}}>
-         <Text style={[styles.boxText,{fontWeight:"bold"}]}>{"DATE"}</Text>
-         <Text style={styles.boxText}>{route.params.date}</Text>
-         <Text style={[styles.boxText,{fontWeight:"bold"}]}>{route.params.name}</Text>
+       <View style={{flex:2,justifyContent:"flex-start",alignItems:"flex-start"}}>
+       <View style={{flexDirection:"row",alignItems:"flex-start",justifyContent:"flex-start"}}>
+            <Text style={[styles.boxText, { fontWeight: "bold" }]}>{"DATE:"}</Text>
+            <Text style={styles.boxText}>{route.params.date}</Text>
+            </View>
+            <View style={{flexDirection:"row"}}>
+            <Text style={[styles.boxText, { fontWeight: "bold" }]}>{"HEAD:"}</Text>
+            <Text style={[styles.boxText, { fontWeight: "bold" }]}>{route.params.name}</Text>
+            </View>
          </View>
          <View style={styles.headerText}>
          <Text style={[styles.boxText,{color:"green",fontWeight:"bold"}]}>{"DEBIT"}</Text>
          <Text style={[styles.boxText,{color:"green"}]}>{rounder(route.params.totdebit,decimal)}</Text>
          </View>  
-         <View style={[styles.headerText,{backgroundColor:"#fff5f6",padding:2}]}>
+         <View style={[styles.headerText,{padding:2}]}>
          <Text style={[styles.boxText,{color:"red",fontWeight:"bold"}]}>{"CREDIT"}</Text>
          <Text style={[styles.boxText,{color:"red"}]}>{rounder(route.params.totcredit,decimal)}</Text>
          </View>

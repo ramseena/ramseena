@@ -35,7 +35,7 @@ export const getLicense =(token,license,deviceId,appId,dname)=>{
 data.append('app_id',appId);
 data.append('device_type',deviceType);
 data.append('device_id', deviceId);
-data.append('licence_key', "767a7547433157523061726f44697146496e656151642b6a366d726a3155616350306778786e35474751493d");
+data.append('licence_key', license);
 data.append('device_name', dname);
 console.log("req",data,token)
     const requestOptions = {
@@ -84,6 +84,39 @@ data.append('password', password);
   .then(response => {
     const statusCode = response.status;
     const data = response.json();
+    return Promise.all([statusCode, data]);
+  })
+  .then(([res, data]) => {
+    console.log(res, data);
+    return({"response":data,"status":res})
+  })
+  .catch(error => {
+    console.error(error);
+    return { name: "network error", description: "" };
+  });
+  
+}
+export const logoutRequest =(clientToken,token,deviceId)=>{
+ 
+  const data = new FormData();
+data.append('client_token', clientToken);
+data.append('device_type', deviceType);
+data.append('device_id', deviceId);
+
+
+  const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'multipart/form-data' ,
+      'Authorization': 'Bearer ' + token
+  },
+      body: data
+  };
+ 
+  return fetch('http://report.dqtech.in/api/logOut',requestOptions)
+  .then(response => {
+    const statusCode = response.status;
+    const data = response.json();
+    console.log("logoutsuccess")
     return Promise.all([statusCode, data]);
   })
   .then(([res, data]) => {
@@ -292,7 +325,7 @@ data.append('device_id', deviceId);
         'Authorization': `Bearer ${token}`},
       body: data
   };
- 
+ console.log("req",requestOptions)
   return fetch('http://report.dqtech.in/api/switchUser',requestOptions)
   .then(response => response.json())
   .then(json=> {

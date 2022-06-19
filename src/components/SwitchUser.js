@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { AuthContext } from '../components/context';
 import { StyleSheet, SafeAreaView, StatusBar, Text, View, FlatList, Image, Alert, ScrollView, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from "@react-native-community/netinfo";
@@ -6,25 +7,43 @@ import DeviceInfo from 'react-native-device-info';
 import Toast from 'react-native-simple-toast';
 
 import Header from '../common/Header';
-const SwitchScreen = ({ route,navigation }) => {
-  
+const SwitchUser = ({ route,navigation }) => {
+  console.log("route",route.params.data.data)
   const [userData, setUserData] = useState(route.params.data.data);
   const [loggedIn, setLoggedIn] = useState("");
   const [selectedShop,setSelectedShop]=useState();
+  const { signOut } = React.useContext(AuthContext);
   const chngetoken = async (data) => {
-  
-    setSelectedShop(data.name)
-    await AsyncStorage.setItem("clienttoken", data.client_token);
     AsyncStorage.setItem("shopName",data.name)
+    await AsyncStorage.setItem("clienttoken", data.client_token);
+ 
+   if(data.username)
+   {
+    setSelectedShop(data.name)
+   
+
+    AsyncStorage.setItem("userName",data.username)
     AsyncStorage.setItem("decimals",JSON.stringify(data.decimals))
     AsyncStorage.setItem("expiry",data.expires_on)
     const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
     setLoggedIn(isLoggedIn)
-      navigation.navigate("login")
-    }
-  
-  const Item = ({ item }) => {
 
+    if(isLoggedIn === "true")
+    {
+    navigation.navigate("Add Shop")
+    }
+    else{
+    
+     signOut()
+    }
+}
+else{
+    signOut("switch")
+}
+  
+  }
+  const Item = ({ item }) => {
+console.log("it",item)
     return (
       <View >
         <TouchableOpacity onPress={() => chngetoken(item)} style={{ color:"#000",borderColor:item.client_token ==selectedShop? "green":"#fff" ,borderWidth:1,borderRadius:15,justifyContent: "center", margin: 10, padding: 20, alignItems: "center", backgroundColor:item.client_token ==selectedShop? "#e4f5a6":"#fff" }}><Text style={{ color: "#000",fontWeight:"bold"}}>{item.name}</Text></TouchableOpacity>
@@ -33,20 +52,20 @@ const SwitchScreen = ({ route,navigation }) => {
   const findUser = async () => {
     const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
     setLoggedIn(isLoggedIn)
-    
+    setUserData(route.params.data.data)
     const clienttoken = await AsyncStorage.getItem("clienttoken");
-    console.log("CURR",clienttoken)
     setSelectedShop(clienttoken)
   }
   React.useEffect(() => {
+    
     const unsubscribe = navigation.addListener('focus', () => {
       findUser() 
     });
   
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
-  }, [route.params]);
-  
+  },[route.params.data.data]);
+  console.log("kooooooooi")
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#f1f2f4' }}>
       <View style={{ flex: 1, backgroundColor: '#f1f2f4' }}>
@@ -54,7 +73,7 @@ const SwitchScreen = ({ route,navigation }) => {
 
         
         <View style={{ flexDirection: "row" ,marginTop:"3%"}} >
-        <TouchableOpacity style={{width:60}}onPress={() => navigation.navigate("login")}>
+        <TouchableOpacity style={{width:60}}onPress={() => loggedIn==="true"?navigation.navigate("Add Shop"):navigation.navigate("login")}>
           <Image source={require('../images/back_round.png')} style={{ width: 38, height: 38 ,resizeMode:"contain"}}></Image>
         </TouchableOpacity>
         <View style={{justifyContent:'center',alignItems:"center"}}><Text style={{textAlign:"center",marginLeft:20, color: "#000", fontSize: 15, fontWeight: "500" }}>{"Switch Shops"}</Text></View>
@@ -70,6 +89,7 @@ const SwitchScreen = ({ route,navigation }) => {
           <FlatList
             numColumns={1}
             data={userData}
+            extraData={userData}
             renderItem={({ item }) => <Item item={item} />}
 
           />
@@ -179,4 +199,4 @@ const styles = StyleSheet.create({
 
 
 
-export default SwitchScreen;
+export default SwitchUser;

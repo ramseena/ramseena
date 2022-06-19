@@ -20,6 +20,10 @@ useEffect(()=>{
     },[route])
     
     const Item=({ item })=> {
+      var d = new Date(item.date) 
+
+var datestring = d.getDate()  + "-" + (d.getMonth()+1) + "-" + d.getFullYear() ;
+
         return (
             
           <View style={{ flex: 1 }}>
@@ -33,7 +37,7 @@ useEffect(()=>{
           <View style={{flexDirection:"row"}}>
           <Text style={styles.boxTextTag}>DATE </Text>
           {/* <Text style={styles.boxTextTag1}>{moment(item.date, "YYYY-MM-DD").format("DD-MM-YYYY") } </Text> */}
-            <Text style={styles.boxTextTag1}>{item.date} </Text> 
+            <Text style={styles.boxTextTag1}>{datestring} </Text> 
           
           </View>
               <View style={{flexDirection:"row"}}>
